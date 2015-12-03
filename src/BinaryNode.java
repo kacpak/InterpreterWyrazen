@@ -3,14 +3,25 @@ public class BinaryNode {
     private String value;
 
     private BinaryNode leftNode;
+
     private BinaryNode rightNode;
 
     public BinaryNode(String value) {
         this.value = value;
     }
 
+    /**
+     * Jeśli {@see BinaryNode} nie posiada dzieci, uznawany jest za wartość
+     */
     public boolean isValue() {
         return leftNode == null && rightNode == null;
+    }
+
+    /**
+     * Jeśli {@see BinaryNode} posiada dzieci które uznawane są za wartości, to jest operacją
+     */
+    public boolean isSimpleOperation() {
+        return !isValue() && leftNode.isValue() && rightNode.isValue();
     }
 
     public BinaryNode getLeftNode() {

@@ -40,21 +40,21 @@ public class ReversePolishNotation {
 
     /**
      * Zwraca tokeny ułożone w odwrotnej notacji polskiej
-     * na podstawie Shunting-yard algorithm {@see https://en.wikipedia.org/wiki/Shunting-yard_algorithm}
+     * na podstawie @see <a href="https://en.wikipedia.org/wiki/Shunting-yard_algorithm">Shunting-yard algorithm</a>
      */
-    public static String[] execute(String expression) {
+    public static String[] execute(String wyrażenie) {
         // Upewniam się że operatory są odpowiednio rozdzielone
-        expression = expression
+        wyrażenie = wyrażenie
                 .replaceAll("\\(", " ( ")
                 .replaceAll("\\)", " ) ");
 
         for (Map.Entry<String, Integer> operator : OPERATORS.entrySet())
-            expression = expression.replaceAll(operator.getKey(), " " + operator.getKey() + " ");
+            wyrażenie = wyrażenie.replaceAll(operator.getKey(), " " + operator.getKey() + " ");
 
-        expression = expression.toLowerCase();
+        wyrażenie = wyrażenie.toLowerCase();
 
         // Tworzę nasze tokeny
-        String[] inputTokens = expression.split("\\s+");
+        String[] inputTokens = wyrażenie.split("\\s+");
 
         // Przygotowuję listę wynikową tokenów w notacji oraz stos operatorów
         ArrayList<String> wynik = new ArrayList<>();
@@ -65,7 +65,7 @@ public class ReversePolishNotation {
             if (token.isEmpty())
                 continue;
 
-            // Jeśli to operator, wykonaj operacje na stosie
+            // Jeśli to operator, to dodaj poprzedni do wyniku (jeśli jest bardziej wiążący), a nowy dodaj na stos
             if (isOperator(token)) {
                 while (!stosOperatorów.empty() && isOperator(stosOperatorów.peek())) {
                     if (compareOperators(token, stosOperatorów.peek()) <= 0) {
@@ -76,22 +76,26 @@ public class ReversePolishNotation {
                 }
                 stosOperatorów.push(token);
 
+            // Dodaj "(" do stosu
             } else if (token.equals("(")) {
                 stosOperatorów.push(token);
 
+            // Jeśli ")" wykonaj dodaj do wyniku kolejne zapisane operatory z tego nawiasu
             } else if (token.equals(")")) {
                 while (!stosOperatorów.empty() && !stosOperatorów.peek().equals("("))
                     wynik.add(stosOperatorów.pop());
                 stosOperatorów.pop();
 
+            // Jeśli nie jest to żaden z operatorów dodaj do wyniku
             } else
                 wynik.add(token);
         }
 
+        // Dodaj pozostałe operatory do wyniku
         while (!stosOperatorów.empty())
             wynik.add(stosOperatorów.pop());
 
-        String[] output = new String[wynik.size()];
-        return wynik.toArray(output);
+        String[] tokeny = new String[wynik.size()];
+        return wynik.toArray(tokeny);
     }
 }
