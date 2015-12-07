@@ -10,7 +10,7 @@ public class Main {
         // Wypisanie wygenerowanych danych
         println("Dane:");
         Data data = new Data();
-        data.addExampleData(0, 50);
+        data.addRandomDataInRange(20, 0, 50);
         data.addData(1, 2, 5, 10, 18, 33, 15, 0);
         data.addData(1, 2, 5, 45, 18, 33, 15, 0);
         data.addData(2, 1, 452, 10, 18, 33, 15, 0);
@@ -21,33 +21,64 @@ public class Main {
         while (true) {
             // Podanie wyrażenia lub ustawienie domyślnego
             println("Podaj swoje wyrażenie:");
+            String enteredExpression = null;
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String expression = null;
             try {
-                expression = br.readLine();
-            } catch (IOException e) {
-                // Nic
-            }
-            expression = expression == null || expression.isEmpty() ? defaultExpression : expression;
+                enteredExpression = br.readLine();
 
-            println("Wybrane wyrażenie:");
-            println(expression);
-            println();
+            } catch (IOException e) {
+                // Expression pozostaje null
+                e.printStackTrace();
+            }
+
+            if (enteredExpression == null || enteredExpression.isEmpty()) {
+                enteredExpression = defaultExpression;
+                println("Wybrano wyrażenie przykładowe:");
+            } else
+                println("Wybrane wyrażenie:");
+
+
+
+            // Inicjalizuję nasze wyrażenie
+            Expression expression;
+            try {
+                expression = new Expression(enteredExpression);
+                println(expression.getExpression());
+                println();
+
+            } catch (UnsupportedOperationException e) {
+                println("Wprowadzono nielegalne znaki.");
+                println();
+                continue;
+            }
 
 
             // Wyświetlenie drzewa operacji
             println("Drzewo operacji:");
-            String[] newExpression = ReversePolishNotation.execute(expression);
-            BinaryNode node = Tree.makeTree(newExpression);
-            Tree.printTree(node);
+            BinaryNode tree;
+            try {
+                tree = expression.getExpressionTree();
+                BinaryExpressionTreeGenerator.printTree(tree);
+
+            } catch (Exception e) {
+                println("Nie udało się utworzyć drzewa operacji.");
+                println();
+                continue;
+            }
             println();
 
 
             // Wyświetlenie wybranych danych
             println("Wybrane dane:");
-            Data selectedData = data.select(node);
-            println(selectedData.toString());
-            println();
+            try {
+                Data selectedData = data.select(tree);
+                println(selectedData.toString());
+                println();
+
+            } catch (Exception e) {
+                println("Wystąpił problem przy wyświetlaniu wyników.");
+                println();
+            }
         }
     }
 

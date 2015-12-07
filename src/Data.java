@@ -4,14 +4,28 @@ import java.util.*;
  * Przechowuje listę danych całkowitoliczbowych w kolumnach a, b, c, d, e, f, g, h
  */
 public class Data {
+
+    /**
+     * Przechowywane dane
+     */
     ArrayList<TreeMap<String, Integer>> data;
+
+    /**
+     * Generator liczb pseudolosowych
+     */
     Random random;
 
+    /**
+     * Tworzy obiekt obsługujący działania na danych w kolumnach [a-h]
+     */
     public Data() {
         data = new ArrayList<>();
         random = new Random();
     }
 
+    /**
+     * Tworzy obiekt obsługujący działania na danych w kolumnach [a-h] inicjalizując go podanymi danymi
+     */
     private Data(ArrayList<TreeMap<String, Integer>> data) {
         this.data = data;
     }
@@ -70,11 +84,12 @@ public class Data {
 
     /**
      * Generuje 20 przykładowych danych z podanego zakresu i dodaje do listy
+     * @param n ilość dodanych danych
      * @param from przedział od
      * @param to przedział do
      */
-    public void addExampleData(int from, int to) {
-        for (int i = 0; i < 20; i++)
+    public void addRandomDataInRange(int n, int from, int to) {
+        for (int i = 0; i < n; i++)
             addData(
                     getRandom(from, to),
                     getRandom(from, to),
@@ -116,22 +131,24 @@ public class Data {
         if (expressionTree.isSimpleOperation()) {
             BinaryNode leftNode = expressionTree.getLeftNode();
             BinaryNode rightNode = expressionTree.getRightNode();
+            String operator = expressionTree.getValue();
 
-            return getSimpleOperationIndexes(leftNode.getValue(), rightNode.getValue(), expressionTree.getValue());
+            return getSimpleOperationIndexes(leftNode.getValue(), rightNode.getValue(), operator);
 
         // W przeciwnym razie wywołujemy funkcję rekurencyjnie, aż otrzymamy indexy dla lewego i prawego dzieck
         // i stosujemy odpowiednią operacje logiczną
         } else {
             TreeSet<Integer> leftIndexes = selectIndexes(expressionTree.getLeftNode());
             TreeSet<Integer> rightIndexes = selectIndexes(expressionTree.getRightNode());
+            String operator = expressionTree.getValue();
 
-            switch (expressionTree.getValue()) {
+            switch (operator) {
                 case "and":
                     return getAndResult(leftIndexes, rightIndexes);
                 case "or":
                     return getOrResult(leftIndexes, rightIndexes);
                 default:
-                    return null;
+                    return new TreeSet<>();
             }
         }
     }
@@ -181,9 +198,12 @@ public class Data {
     private TreeSet<Integer> getSimpleOperationIndexes(String value1, String value2, String operator) {
         TreeSet<Integer> indexes = new TreeSet<>();
         for (int i = 0; i < data.size(); i++) {
+            // Sprawdzam wartości wyrażeń
             TreeMap<String, Integer> row = data.get(i);
             int trueValue1 = isNumeric(value1) ? Integer.parseInt(value1) : row.get(value1);
             int trueValue2 = isNumeric(value2) ? Integer.parseInt(value2) : row.get(value2);
+
+            // Wykonuję operacje
             switch (operator) {
                 case "=":
                     if (trueValue1 == trueValue2)
