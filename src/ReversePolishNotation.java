@@ -7,6 +7,7 @@ public class ReversePolishNotation {
 
     private ReversePolishNotation() {
         // Nie pozwalam na tworzenie obiektów tej klasy
+        // TODO zamień operatory na znaki A, B, C... bo sypie się przy równaniach z kilkoma znakami jako operator
     }
 
     // Operatory wraz z ich wagą wiązaniową

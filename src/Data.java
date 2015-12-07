@@ -4,7 +4,7 @@ import java.util.*;
  * Przechowuje listę danych całkowitoliczbowych w kolumnach a, b, c, d, e, f, g, h
  */
 public class Data {
-    ArrayList<HashMap<String, Integer>> data;
+    ArrayList<TreeMap<String, Integer>> data;
     Random random;
 
     public Data() {
@@ -12,7 +12,7 @@ public class Data {
         random = new Random();
     }
 
-    private Data(ArrayList<HashMap<String, Integer>> data) {
+    private Data(ArrayList<TreeMap<String, Integer>> data) {
         this.data = data;
     }
 
@@ -20,7 +20,7 @@ public class Data {
      * Dodaje podane dane do listy dla kolejych kolumn a, b, c, d, e, f, g, h
      */
     public void addData(int a, int b, int c, int d, int e, int f, int g, int h) {
-        HashMap<String, Integer> map = new HashMap<>();
+        TreeMap<String, Integer> map = new TreeMap<>();
         map.put("a", a);
         map.put("b", b);
         map.put("c", c);
@@ -35,7 +35,7 @@ public class Data {
     /**
      * Dodaje podane dane do listy dla kolejych kolumn a, b, c, d, e, f, g, h
      */
-    public void addData(HashMap<String, Integer> map) {
+    public void addData(TreeMap<String, Integer> map) {
         data.add(map);
     }
 
@@ -43,7 +43,7 @@ public class Data {
      * Pobiera dane z listy
      * @param index Indeks na liście
      */
-    public HashMap<String, Integer> getData(int index) {
+    public TreeMap<String, Integer> getData(int index) {
         return data.get(index);
     }
 
@@ -100,7 +100,7 @@ public class Data {
      */
     public Data select(BinaryNode expressionTree) {
         TreeSet<Integer> indexes = selectIndexes(expressionTree);
-        ArrayList<HashMap<String, Integer>> selectedData = new ArrayList<>();
+        ArrayList<TreeMap<String, Integer>> selectedData = new ArrayList<>();
         for (int index : indexes)
             selectedData.add(data.get(index));
 
@@ -117,18 +117,7 @@ public class Data {
             BinaryNode leftNode = expressionTree.getLeftNode();
             BinaryNode rightNode = expressionTree.getRightNode();
 
-            String column;
-            int value;
-
-            if (leftNode.getValue().matches("^-?\\d+$")) {
-                column = rightNode.getValue();
-                value = Integer.parseInt(leftNode.getValue());
-            } else {
-                column = leftNode.getValue();
-                value = Integer.parseInt(rightNode.getValue());
-            }
-
-            return getSimpleOperationIndexes(column, value, expressionTree.getValue());
+            return getSimpleOperationIndexes(leftNode.getValue(), rightNode.getValue(), expressionTree.getValue());
 
         // W przeciwnym razie wywołujemy funkcję rekurencyjnie, aż otrzymamy indexy dla lewego i prawego dzieck
         // i stosujemy odpowiednią operacje logiczną
@@ -176,37 +165,48 @@ public class Data {
         return set;
     }
 
+    public static boolean isNumeric(String str) {
+        try {
+            int d = Integer.parseInt(str);
+            return true;
+
+        } catch(NumberFormatException nfe) {
+            return false;
+        }
+    }
+
     /**
      * Zwraca indexy pasujące do prostego wyrażenia porównującego wartość wybranej kolumny
      */
-    private TreeSet<Integer> getSimpleOperationIndexes(String column, int value, String operator) {
+    private TreeSet<Integer> getSimpleOperationIndexes(String value1, String value2, String operator) {
         TreeSet<Integer> indexes = new TreeSet<>();
         for (int i = 0; i < data.size(); i++) {
-            HashMap<String, Integer> row = data.get(i);
-            int columnValue = row.get(column);
+            TreeMap<String, Integer> row = data.get(i);
+            int trueValue1 = isNumeric(value1) ? Integer.parseInt(value1) : row.get(value1);
+            int trueValue2 = isNumeric(value2) ? Integer.parseInt(value2) : row.get(value2);
             switch (operator) {
                 case "=":
-                    if (columnValue == value)
+                    if (trueValue1 == trueValue2)
                         indexes.add(i);
                     break;
                 case "!=":
-                    if (columnValue != value)
+                    if (trueValue1 != trueValue2)
                         indexes.add(i);
                     break;
                 case ">=":
-                    if (columnValue >= value)
+                    if (trueValue1 >= trueValue2)
                         indexes.add(i);
                     break;
                 case "<=":
-                    if (columnValue <= value)
+                    if (trueValue1 <= trueValue2)
                         indexes.add(i);
                     break;
                 case ">":
-                    if (columnValue > value)
+                    if (trueValue1 > trueValue2)
                         indexes.add(i);
                     break;
                 case "<":
-                    if (columnValue < value)
+                    if (trueValue1 < trueValue2)
                         indexes.add(i);
                     break;
             }

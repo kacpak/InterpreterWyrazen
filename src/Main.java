@@ -18,35 +18,37 @@ public class Main {
         println();
 
 
-        // Podanie wyrażenia lub ustawienie domyślnego
-        println("Podaj swoje wyrażenie:");
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String expression = null;
-        try {
-            expression = br.readLine();
-        } catch (IOException e) {
-            // Nic
+        while (true) {
+            // Podanie wyrażenia lub ustawienie domyślnego
+            println("Podaj swoje wyrażenie:");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String expression = null;
+            try {
+                expression = br.readLine();
+            } catch (IOException e) {
+                // Nic
+            }
+            expression = expression == null || expression.isEmpty() ? defaultExpression : expression;
+
+            println("Wybrane wyrażenie:");
+            println(expression);
+            println();
+
+
+            // Wyświetlenie drzewa operacji
+            println("Drzewo operacji:");
+            String[] newExpression = ReversePolishNotation.execute(expression);
+            BinaryNode node = Tree.makeTree(newExpression);
+            Tree.printTree(node);
+            println();
+
+
+            // Wyświetlenie wybranych danych
+            println("Wybrane dane:");
+            Data selectedData = data.select(node);
+            println(selectedData.toString());
+            println();
         }
-        expression = expression == null || expression.isEmpty() ? defaultExpression : expression;
-
-        println("Wybrane wyrażenie:");
-        println(expression);
-        println();
-
-
-        // Wyświetlenie drzewa operacji
-        println("Drzewo operacji:");
-        String[] newExpression = ReversePolishNotation.execute(expression);
-        BinaryNode node = Tree.makeTree(newExpression);
-        Tree.printTree(node);
-        println();
-
-
-        // Wyświetlenie wybranych danych
-        println("Wybrane dane:");
-        Data selectedData = data.select(node);
-        println(selectedData.toString());
-        println();
     }
 
     public static void println(String... text) {
