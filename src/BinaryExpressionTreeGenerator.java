@@ -19,15 +19,11 @@ public class BinaryExpressionTreeGenerator {
 
         if (tokens.length == 1)
             return new BinaryNode(
-                    ExpressionOperators.restoreOperator(
                             tokens[0]
-                    )
             );
 
         BinaryNode node = new BinaryNode(
-                ExpressionOperators.restoreOperator(
                         tokens[tokens.length - 1]
-                )
         );
         int arguments = tokens.length;
         node.setLeftNode(makeTree(Arrays.copyOfRange(tokens, 0, arguments / 2)));

@@ -62,14 +62,6 @@ public class Expression {
     }
 
     /**
-     * Tokeny wyrażenia w naturalnym porządku z podmienionymi operatorami
-     */
-    public String[] getSubstitutedExpressionTokens() {
-        String[] tokens = getExpressionTokens();
-        return ExpressionOperators.substituteOperators(tokens);
-    }
-
-    /**
      * Tokeny wyrażenia w odwrotnej notacji polskiej
      */
     public String[] getReversePolishNotationTokens() {
@@ -77,17 +69,9 @@ public class Expression {
     }
 
     /**
-     * Tokeny wyrażenia w odwrotnej notacji polskiej z podmienionymi operatorami
-     */
-    public String[] getSubstitutedReversePolishNotationTokens() {
-        String[] tokens = getReversePolishNotationTokens();
-        return ExpressionOperators.substituteOperators(tokens);
-    }
-
-    /**
      * Drzewo binarne reprezentujące wyrażenie
      */
     public BinaryNode getExpressionTree() {
-        return BinaryExpressionTreeGenerator.makeTree(getSubstitutedReversePolishNotationTokens());
+        return BinaryExpressionTreeGenerator.makeTree(getReversePolishNotationTokens());
     }
 }
