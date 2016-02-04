@@ -95,20 +95,23 @@ public class Expression {
         TreeNode lastNode = expressionTree;
 
         // Zmienna określająca ostatnią zmianę
-        boolean isLastTokenOperator = true;
+        boolean isLastTokenOperator = ExpressionOperators.isOperator(lastNode.getValue());
 
+        // Wykonuj, aż do wyczerpania tokenów
         while (queue.size() > 0) {
+            // Jeśli ostatnio wstawiono operator, to wstaw kolejny token do prawego poddrzewa
             if (isLastTokenOperator) {
-                TreeNode leftNode = new TreeNode(queue.poll());
+                TreeNode newNode = new TreeNode(queue.poll());
 
-                lastNode.setLeftNode(leftNode);
-                lastNode = leftNode;
+                lastNode.setRightNode(newNode);
+                lastNode = newNode;
 
+            // W przeciwnym razie wstaw token to lewego poddrzewa
             } else {
                 TreeNode parent = lastNode.getFirstParentWithEmptyRightNode();
                 lastNode = new TreeNode(queue.poll());
 
-                parent.setRightNode(lastNode);
+                parent.setLeftNode(lastNode);
             }
 
             isLastTokenOperator = ExpressionOperators.isOperator(lastNode.getValue());

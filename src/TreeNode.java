@@ -107,7 +107,7 @@ public class TreeNode {
      */
     public TreeNode getFirstParentWithEmptyRightNode() {
         if (null != parentNode) {
-            if (null == parentNode.getRightNode())
+            if (null == parentNode.getLeftNode())
                 return parentNode;
             else
                 return parentNode.getFirstParentWithEmptyRightNode();
