@@ -102,15 +102,15 @@ public class TreeNode {
     }
 
     /**
-     * Zwraca pierwszy węzeł w górę w hierarchi który ma pustą prawą gałąź
-     * @return węzeł z pustą prawą gałęzią
+     * Zwraca pierwszy węzeł w górę w hierarchi który ma pustą lewą gałąź
+     * @return węzeł z pustą lewą gałęzią
      */
-    public TreeNode getFirstParentWithEmptyRightNode() {
+    public TreeNode getFirstParentWithEmptyLeftNode() {
         if (null != parentNode) {
             if (null == parentNode.getLeftNode())
                 return parentNode;
             else
-                return parentNode.getFirstParentWithEmptyRightNode();
+                return parentNode.getFirstParentWithEmptyLeftNode();
         } else
             return null;
     }

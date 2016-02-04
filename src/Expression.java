@@ -108,7 +108,7 @@ public class Expression {
 
             // W przeciwnym razie wstaw token to lewego poddrzewa
             } else {
-                TreeNode parent = lastNode.getFirstParentWithEmptyRightNode();
+                TreeNode parent = lastNode.getFirstParentWithEmptyLeftNode();
                 lastNode = new TreeNode(queue.poll());
 
                 parent.setLeftNode(lastNode);
