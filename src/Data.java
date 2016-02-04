@@ -111,9 +111,9 @@ public class Data {
 
     /**
      * Wybiera dane z listy spełniające podane wyrażenie
-     * @param expressionTree
+     * @param expressionTree drzewo wyrażenia
      */
-    public Data select(BinaryNode expressionTree) {
+    public Data select(TreeNode expressionTree) {
         TreeSet<Integer> indexes = selectIndexes(expressionTree);
         ArrayList<TreeMap<String, Integer>> selectedData = new ArrayList<>();
         for (int index : indexes)
@@ -124,13 +124,13 @@ public class Data {
 
     /**
      * Wybiera indexy z listy pasujące do wyrażenia
-     * @param expressionTree
+     * @param expressionTree drzewo wyrażenia
      */
-    private TreeSet<Integer> selectIndexes(BinaryNode expressionTree) {
+    private TreeSet<Integer> selectIndexes(TreeNode expressionTree) {
         // Jeśli node jest już prostym wyrażeniem pobieramy indexy z listy pasujące do wyrażenia
         if (expressionTree.isSimpleOperation()) {
-            BinaryNode leftNode = expressionTree.getLeftNode();
-            BinaryNode rightNode = expressionTree.getRightNode();
+            TreeNode leftNode = expressionTree.getLeftNode();
+            TreeNode rightNode = expressionTree.getRightNode();
             String operator = expressionTree.getValue();
 
             return getSimpleOperationIndexes(leftNode.getValue(), rightNode.getValue(), operator);
@@ -156,16 +156,16 @@ public class Data {
     /**
      * Operacja AND na elementach list
      */
-    private TreeSet<Integer> getAndResult(TreeSet<Integer> list1, TreeSet<Integer> list2) {
+    private TreeSet<Integer> getAndResult(TreeSet<Integer> leftList, TreeSet<Integer> rightList) {
         TreeSet<Integer> set = new TreeSet<>();
 
-        for (int index : list1) {
-            if (list2.contains(index))
+        for (int index : leftList) {
+            if (rightList.contains(index))
                 set.add(index);
         }
 
-        for (int index : list2) {
-            if (list1.contains(index))
+        for (int index : rightList) {
+            if (leftList.contains(index))
                 set.add(index);
         }
 
@@ -175,16 +175,21 @@ public class Data {
     /**
      * Operacja OR na elementach list
      */
-    private TreeSet<Integer> getOrResult(TreeSet<Integer> list1, TreeSet<Integer> list2) {
+    private TreeSet<Integer> getOrResult(TreeSet<Integer> leftList, TreeSet<Integer> rightList) {
         TreeSet<Integer> set = new TreeSet<>();
-        set.addAll(list1);
-        set.addAll(list2);
+        set.addAll(leftList);
+        set.addAll(rightList);
         return set;
     }
 
-    public static boolean isNumeric(String str) {
+    /**
+     * Zwraca {@code true} jeśli zadany łańcuch jest liczbą całkowitą
+     * @param str łańcuch do sprawdzenia
+     * @return {@code true} jeśli zadany łańcuch jest liczbą całkowitą
+     */
+    private static boolean isNumeric(String str) {
         try {
-            int d = Integer.parseInt(str);
+            Integer.parseInt(str);
             return true;
 
         } catch(NumberFormatException nfe) {

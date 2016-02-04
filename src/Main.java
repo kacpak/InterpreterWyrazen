@@ -55,10 +55,10 @@ public class Main {
 
             // Wyświetlenie drzewa operacji
             println("Drzewo operacji:");
-            BinaryNode tree;
+            TreeNode tree;
             try {
                 tree = expression.getExpressionTree();
-                BinaryExpressionTreeGenerator.printTree(tree);
+                expression.printExpressionTree();
 
             } catch (Exception e) {
                 println("Nie udało się utworzyć drzewa operacji.");
