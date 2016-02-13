@@ -157,18 +157,8 @@ public class Data {
      * Operacja AND na elementach list
      */
     private TreeSet<Integer> getAndResult(TreeSet<Integer> leftList, TreeSet<Integer> rightList) {
-        TreeSet<Integer> set = new TreeSet<>();
-
-        for (int index : leftList) {
-            if (rightList.contains(index))
-                set.add(index);
-        }
-
-        for (int index : rightList) {
-            if (leftList.contains(index))
-                set.add(index);
-        }
-
+        TreeSet<Integer> set = new TreeSet<>(leftList);
+        set.retainAll(rightList);
         return set;
     }
 
